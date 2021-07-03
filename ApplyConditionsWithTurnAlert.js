@@ -1,6 +1,5 @@
 /* Notes:
 
-
 ***Install module "Turn Alert" for turn tracking***
 
 This macro is to be used on NPCs in combat. Only use it on one token at a time. It will:
@@ -16,7 +15,9 @@ This macro is to be used on NPCs in combat. Only use it on one token at a time. 
 	Has an undo feature to remove the condition for when the condition expires.
 
 Possible future additions:
+	Add a checker to not add more than one instance of a condition.
 	Add a way to modify abiity scores (Not sure how often this comes up in combat. Not much in my expeirence.)
+	Check if Turn Alert is installed to not spam the turn error.
 	FX Effects?
 */
 
@@ -65,7 +66,7 @@ Possible future additions:
 						<option value="MovespeedMod">Inhib: Half Movespeed</option>
 					</select>
 					<label>Undo?</label>
-						<input id ="undoFlag" name="undoFlag" type="checkbox" value="off"/>
+						<input id ="undoBox" name="undoBox" type="checkbox" value="off"/>
 				</div>
 				<div class="form-group2">
 					<label for="formRounds" style="float:left;"> Effect rounds: </label>
@@ -92,7 +93,7 @@ Possible future additions:
 				
 				//Form Stuff
 				const formRounds = parseInt(document.getElementById('formRounds').value);
-				const undoFlag = document.getElementById('undoFlag').checked;
+				const undoBox = document.getElementById('undoBox').checked;
 				let modifier = html.find('[name="modifier"]')[0].value || "none";
 				
 				//begin changes
@@ -131,28 +132,11 @@ Possible future additions:
 					//Reused Variables
 					let condName = ''
 					let lowerCondName = ''
+					let undoFlag = undoBox;
+					let undoFlagInverse = !undoBox;
+					
 
-						/*case "Condition":
-							condName = "Condition"
-							lowerCondName = condName.charAt(0).toLowerCase() + condName.slice(1)
-							if (!undoFlag) {
-								if (token.actor.hasCondition(lowerCondName) == true){
-									return ui.notifications.error("Token already has that condition!")
-								}
-							token.actor.setCondition(lowerCondName, true);
-							token.actor.update({"data.conditions.condition" : true});
-							if (tokenType == "npc") {
-								//ADJUST VALUES
-								}
-							turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
-							}
-							else {
-								token.actor.setCondition(lowerCondName, false);
-                				token.actor.update({"data.conditions.condition" : false});
-							}
-							break;
-							*/
-
+						
 
 					//Condition Calls
 					switch (modifier)
@@ -167,18 +151,18 @@ Possible future additions:
 						case "Asleep":
 							condName = "Asleep"
 							lowerCondName = condName.charAt(0).toLowerCase() + condName.slice(1)
-							if (!undoFlag) {
-								if (playerActor.hasCondition(lowerCondName) == true){
-									return ui.notifications.error("Token already has that condition!")
-								}
-								await playerActor.setCondition(lowerCondName, true);
-								if (tokenType == "npc") {
-									//TODO: -10 to perception
-								}
-								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === false){
+								return ui.notifications.error("Token already has that condition!")
 							}
-							else {
-								await playerActor.setCondition(lowerCondName, false);
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === true){
+								return ui.notifications.error("Token doesn't have this condition!")
+							}
+							await playerActor.setCondition(lowerCondName, !undoFlag);
+							if (tokenType == "npc") {
+								//TODO: -10 to perception
+							}
+							if (!undoFlag) {
+								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
 							}
 							break;
 
@@ -187,21 +171,19 @@ Possible future additions:
 						case "Blinded":
 							condName = "Blinded"
                             lowerCondName = condName.charAt(0).toLowerCase() + condName.slice(1)
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === false){
+								return ui.notifications.error("Token already has that condition!")
+							}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === true){
+								return ui.notifications.error("Token doesn't have this condition!")
+							}
+							await playerActor.setCondition(lowerCondName, !undoFlag);
+							applyFlatfooted(playerActor,undoFlag,tokenType);
+							if (tokenType == "npc") {
+								//TODO: -4 to Str and Dex based skill checks
+							}
                             if (!undoFlag) {
-                                if (playerActor.hasCondition(lowerCondName) == true){
-                                    return ui.notifications.error("Token already has that condition!")
-                                }
-                                await playerActor.setCondition(lowerCondName, true);
-                                applyFlatfooted(playerActor,undoFlag,tokenType);
-								if (tokenType == "npc") {
-									//TODO: -4 to Str and Dex based skill checks
-								}
                             	turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
-                            }
-                            else {
-                                await playerActor.setCondition(lowerCondName, false);
-                                applyFlatfooted(playerActor, undoFlag, tokenType);
-                                
                             }
 							break;
 
@@ -209,19 +191,18 @@ Possible future additions:
 						case "Cowering":
 							condName = "cowering"
 							lowerCondName = condName.charAt(0).toLowerCase() + condName.slice(1)
-							if (!undoFlag) {
-								if (playerActor.hasCondition(lowerCondName) == true){
-									return ui.notifications.error("Token already has that condition!")
-								}
-								await playerActor.setCondition(lowerCondName, true);
-								applyFlatfooted(playerActor,undoFlag,tokenType);
-								if (tokenType == "npc") {
-								}
-								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === false){
+								return ui.notifications.error("Token already has that condition!")
 							}
-							else {
-								await playerActor.setCondition(lowerCondName, false);
-								applyFlatfooted(playerActor,undoFlag,tokenType);
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === true){
+								return ui.notifications.error("Token doesn't have this condition!")
+							}
+							await playerActor.setCondition(lowerCondName, !undoFlag);
+							applyFlatfooted(playerActor,undoFlag,tokenType);
+							if (tokenType == "npc") {
+							}
+							if (!undoFlag) {
+								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
 							}
 							break;
 							
@@ -230,17 +211,17 @@ Possible future additions:
 						case "Confused":
 							condName = "Confused"
 							lowerCondName = condName.charAt(0).toLowerCase() + condName.slice(1)
-							if (!undoFlag) {
-								if (playerActor.hasCondition(lowerCondName) == true){
-									return ui.notifications.error("Token already has that condition!")
-								}
-								await playerActor.setCondition(lowerCondName, true);
-								if (tokenType == "npc") {
-								}
-								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === false){
+								return ui.notifications.error("Token already has that condition!")
 							}
-							else {
-								await playerActor.setCondition(lowerCondName, false);
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === true){
+								return ui.notifications.error("Token doesn't have this condition!")
+							}
+							await playerActor.setCondition(lowerCondName, !undoFlag);
+							if (tokenType == "npc") {
+							}
+							if (!undoFlag) {	
+								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
 							}
 							break;
 
@@ -249,17 +230,17 @@ Possible future additions:
 						case "Dazed":
 							condName = "Dazed"
 							lowerCondName = condName.charAt(0).toLowerCase() + condName.slice(1)
-							if (!undoFlag) {
-								if (playerActor.hasCondition(lowerCondName) == true){
-									return ui.notifications.error("Token already has that condition!")
-								}
-								await playerActor.setCondition(lowerCondName, true);
-								if (tokenType == "npc") {
-								}
-								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === false){
+								return ui.notifications.error("Token already has that condition!")
 							}
-							else {
-								await playerActor.setCondition(lowerCondName, false);
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === true){
+								return ui.notifications.error("Token doesn't have this condition!")
+							}
+							await playerActor.setCondition(lowerCondName, !undoFlag);
+							if (tokenType == "npc") {
+							}
+							if (!undoFlag) {
+								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
 							}
 							break;
 							
@@ -268,19 +249,19 @@ Possible future additions:
 						case "Dazzled":
 							condName = "Dazzled"
 							lowerCondName = condName.charAt(0).toLowerCase() + condName.slice(1)
-							if (!undoFlag) {
-								if (playerActor.hasCondition(lowerCondName) == true){
-									return ui.notifications.error("Token already has that condition!")
-								}
-								await playerActor.setCondition(lowerCondName, true);
-								if (tokenType == "npc") {
-									//TODO: -1 perception
-									modifyBAB(playerActor,undoFlag,DAZZZLED_MOD);
-								}
-							turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === false){
+								return ui.notifications.error("Token already has that condition!")
 							}
-							else {
-								await playerActor.setCondition(lowerCondName, false);
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === true){
+								return ui.notifications.error("Token doesn't have this condition!")
+							}
+							await playerActor.setCondition(lowerCondName, !undoFlag);
+							if (tokenType == "npc") {
+								//TODO: -1 perception
+								modifyBAB(playerActor,undoFlag,DAZZZLED_MOD);
+							}
+							if (!undoFlag) {
+							turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
 							}
 							break;
 							
@@ -289,19 +270,19 @@ Possible future additions:
 						case "Deafened":
 							condName = "Deafened"
 							lowerCondName = condName.charAt(0).toLowerCase() + condName.slice(1)
-							if (!undoFlag) {
-								if (playerActor.hasCondition(lowerCondName) == true){
-									return ui.notifications.error("Token already has that condition!")
-								}
-								await playerActor.setCondition(lowerCondName, true);
-								if (tokenType == "npc") {
-									//TODO: -4 perception checks
-								}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === false){
+								return ui.notifications.error("Token already has that condition!")
+							}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === true){
+								return ui.notifications.error("Token doesn't have this condition!")
+							}
+							await playerActor.setCondition(lowerCondName, !undoFlag);
+							if (tokenType == "npc") {
+								//TODO: -4 perception checks
+							}
+							if (!undoFlag) {								
 								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
-							}
-							else {
-								await playerActor.setCondition(lowerCondName, false);
-							}
+							}							
 							break;
 								
 
@@ -309,21 +290,21 @@ Possible future additions:
 						case "Encumbered":
 							condName = "Encumbered"
 							lowerCondName = condName.charAt(0).toLowerCase() + condName.slice(1)
-							if (!undoFlag) {
-								if (playerActor.hasCondition(lowerCondName) == true){
-									return ui.notifications.error("Token already has that condition!")
-								}
-								await playerActor.setCondition(lowerCondName, true);
-								if (tokenType == "npc") {
-									//TODO: Max dex??
-									modifyMovementConst(playerActor,undoFlag,ENCUMBERED_SPEED_MOD);
-									modifyAC(playerActor,undoFlag,ENCUMBERED_MOD);
-								}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === false){
+								return ui.notifications.error("Token already has that condition!")
+							}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === true){
+								return ui.notifications.error("Token doesn't have this condition!")
+							}
+							await playerActor.setCondition(lowerCondName, !undoFlag);
+							if (tokenType == "npc") {
+								//TODO: Max dex??
+								modifyMovementConst(playerActor,undoFlag,ENCUMBERED_SPEED_MOD);
+								modifyAC(playerActor,undoFlag,ENCUMBERED_MOD);
+							}
+							if (!undoFlag) {								
 								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
-							}
-							else {
-								await playerActor.setCondition(lowerCondName, false);
-							}
+							}							
 							break;
 							
 
@@ -333,23 +314,23 @@ Possible future additions:
 						case "Entangled":
 							condName = "Entangled"
 							lowerCondName = condName.charAt(0).toLowerCase() + condName.slice(1)
-							if (!undoFlag) {
-								if (playerActor.hasCondition(lowerCondName) == true){
-									return ui.notifications.error("Token already has that condition!")
-								}
-								await playerActor.setCondition(lowerCondName, true);
-								if (tokenType == "npc") {
-									modifyMovement(playerActor,undoFlag,MOVEMENT_MOD);
-									modifyBAB(playerActor,undoFlag,ENTANGLED_MOD);
-									modifyAC(playerActor,undoFlag,ENTANGLED_MOD);
-									modifyRefSave(playerActor,undoFlag,ENTANGLED_MOD);
-									//TODO: -2 Dex skill and ability checks
-								}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === false){
+								return ui.notifications.error("Token already has that condition!")
+							}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === true){
+								return ui.notifications.error("Token doesn't have this condition!")
+							}
+							await playerActor.setCondition(lowerCondName, !undoFlag);
+							if (tokenType == "npc") {
+								modifyMovement(playerActor,undoFlag,MOVEMENT_MOD);
+								modifyBAB(playerActor,undoFlag,ENTANGLED_MOD);
+								modifyAC(playerActor,undoFlag,ENTANGLED_MOD);
+								modifyRefSave(playerActor,undoFlag,ENTANGLED_MOD);
+								//TODO: -2 Dex skill and ability checks
+							}
+							if (!undoFlag) {								
 								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
-							}
-							else {
-								await playerActor.setCondition(lowerCondName, false);
-							}
+							}						
 							break;
 							
 
@@ -357,11 +338,13 @@ Possible future additions:
 						case "Exhausted":
 							condName = "Exhausted"
 							lowerCondName = condName.charAt(0).toLowerCase() + condName.slice(1)
-							if (!undoFlag) {
-								if (playerActor.hasCondition(lowerCondName) == true){
-									return ui.notifications.error("Token already has that condition!")
-								}
-							await playerActor.setCondition(lowerCondName, true);
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === false){
+								return ui.notifications.error("Token already has that condition!")
+							}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === true){
+								return ui.notifications.error("Token doesn't have this condition!")
+							}
+							await playerActor.setCondition(lowerCondName, !undoFlag);
 							if (tokenType == "npc") {
 								//TODO: -3 Str/Dex-based skill and ability checks
 								modifyAC(playerActor,undoFlag,EXHAUSTED_MOD);
@@ -370,11 +353,9 @@ Possible future additions:
 								modifyRefSave(playerActor,undoFlag,EXHAUSTED_MOD);
 								modifyMovement(playerActor,undoFlag,MOVEMENT_MOD);
 							}
-							turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
-							}
-							else {
-								await playerActor.setCondition(lowerCondName, false);
-							}
+							if (!undoFlag) {								
+								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
+							}							
 							break;
 							
 
@@ -382,11 +363,13 @@ Possible future additions:
 						case "Fatigued":
 							condName = "Fatigued"
 							lowerCondName = condName.charAt(0).toLowerCase() + condName.slice(1)
-							if (!undoFlag) {
-								if (playerActor.hasCondition(lowerCondName) == true){
-									return ui.notifications.error("Token already has that condition!")
-								}
-							await playerActor.setCondition(lowerCondName, true);
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === false){
+								return ui.notifications.error("Token already has that condition!")
+							}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === true){
+								return ui.notifications.error("Token doesn't have this condition!")
+							}
+							await playerActor.setCondition(lowerCondName, !undoFlag);
 							if (tokenType == "npc") {
 								modifyAC(playerActor,undoFlag,FATIGUED_MOD);
 								modifyBAB(playerActor,undoFlag,FATIGUED_MOD);
@@ -394,11 +377,9 @@ Possible future additions:
 								modifyAD(playerActor,undoFlag,FATIGUED_MOD,true,false);
 								//TODO: -1 Str/Dex-based skill and ability checks
 							}
-							turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
-							}
-							else {
-								await playerActor.setCondition(lowerCondName, false);
-							}
+							if (!undoFlag) {								
+								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
+							}							
 							break;
 							
 
@@ -406,20 +387,19 @@ Possible future additions:
 						case "Flatfooted":
 							condName = "Flatfooted"
 							lowerCondName = condName.charAt(0).toLowerCase() + condName.slice(1)
-							if (!undoFlag) {
-								if (playerActor.hasCondition(lowerCondName) == true){
-									return ui.notifications.error("Token already has that condition!")
-								}
-								await playerActor.setCondition(lowerCondName, true);
-								applyFlatfooted(playerActor,undoFlag,tokenType);
-								if (tokenType == "npc") {
-								}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === false){
+								return ui.notifications.error("Token already has that condition!")
+							}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === true){
+								return ui.notifications.error("Token doesn't have this condition!")
+							}
+							await playerActor.setCondition(lowerCondName, !undoFlag);
+							applyFlatfooted(playerActor,undoFlag,tokenType);
+							if (tokenType == "npc") {
+							}
+							if (!undoFlag) {								
 								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
-							}
-							else {
-								await playerActor.setCondition(lowerCondName, false);
-								applyFlatfooted(playerActor,undoFlag,tokenType);
-							}
+							}							
 							break;
 							
 						
@@ -427,170 +407,169 @@ Possible future additions:
 						case "Frightened":
 							condName = "Frightened"
 							lowerCondName = condName.charAt(0).toLowerCase() + condName.slice(1)
-							if (!undoFlag) {
-								if (playerActor.hasCondition(lowerCondName) == true){
-									return ui.notifications.error("Token already has that condition!")
-								}
-								await playerActor.setCondition(lowerCondName, true);
-								if (tokenType == "npc") {
-									//TODO: -2 ability checks, and skill checks
-									modifyRefSave(playerActor,undoFlag,FRIGHTENED_MOD);
-									modifyFortSave(playerActor,undoFlag,FRIGHTENED_MOD);
-									modifyWillSave(playerActor,undoFlag,FRIGHTENED_MOD);
-									modifyBAB(playerActor,undoFlag,FRIGHTENED_MOD);
-								}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === false){
+								return ui.notifications.error("Token already has that condition!")
+							}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === true){
+								return ui.notifications.error("Token doesn't have this condition!")
+							}
+							await playerActor.setCondition(lowerCondName, !undoFlag);
+							if (tokenType == "npc") {
+								//TODO: -2 ability checks, and skill checks
+								modifyRefSave(playerActor,undoFlag,FRIGHTENED_MOD);
+								modifyFortSave(playerActor,undoFlag,FRIGHTENED_MOD);
+								modifyWillSave(playerActor,undoFlag,FRIGHTENED_MOD);
+								modifyBAB(playerActor,undoFlag,FRIGHTENED_MOD);
+							}
+							if (!undoFlag) {								
 								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
-							}
-							else {
-								await playerActor.setCondition(lowerCondName, false);
-							}
+							}							
 							break;
 
 						//Grappled
 						case "Grappled":
 							condName = "Grappled"
 							lowerCondName = condName.charAt(0).toLowerCase() + condName.slice(1)
-							if (!undoFlag) {
-								if (playerActor.hasCondition(lowerCondName) == true){
-									return ui.notifications.error("Token already has that condition!")
-								}
-								await playerActor.setCondition(lowerCondName, true);
-								if (tokenType == "npc") {
-									//TODO: -2 dex skill/ability
-									modifyRefSave(playerActor,undoFlag,GRAPPLED_MOD);
-									modifyBAB(playerActor,undoFlag,GRAPPLED_MOD);
-									modifyAC(playerActor,undoFlag,GRAPPLED_MOD);
-								}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === false){
+								return ui.notifications.error("Token already has that condition!")
+							}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === true){
+								return ui.notifications.error("Token doesn't have this condition!")
+							}
+							await playerActor.setCondition(lowerCondName, !undoFlag);
+							if (tokenType == "npc") {
+								//TODO: -2 dex skill/ability
+								modifyRefSave(playerActor,undoFlag,GRAPPLED_MOD);
+								modifyBAB(playerActor,undoFlag,GRAPPLED_MOD);
+								modifyAC(playerActor,undoFlag,GRAPPLED_MOD);
+							}
+							if (!undoFlag) {								
 								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
-							}
-							else {
-								await playerActor.setCondition(lowerCondName, false);
-							}
+							}							
 							break;							
 
 						//Nauseated
 						case "Nauseated":
 							condName = "Nauseated"
 							lowerCondName = condName.charAt(0).toLowerCase() + condName.slice(1)
-							if (!undoFlag) {
-								if (playerActor.hasCondition(lowerCondName) == true){
-									return ui.notifications.error("Token already has that condition!")
-								}
-								await playerActor.setCondition(lowerCondName, true);
-								if (tokenType == "npc") {
-								}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === false){
+								return ui.notifications.error("Token already has that condition!")
+							}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === true){
+								return ui.notifications.error("Token doesn't have this condition!")
+							}
+							await playerActor.setCondition(lowerCondName, !undoFlag);
+							if (tokenType == "npc") {
+							}
+							if (!undoFlag) {								
 								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
-							}
-							else {
-								await playerActor.setCondition(lowerCondName, false);
-							}
+							}							
 							break;
 
 
 						//Off-Kilter
 						case "Offkilter":
-							condName = "Offkilter"
+							condName = "Off-kilter"
 							lowerCondName = condName.charAt(0).toLowerCase() + condName.slice(1)
-							if (!undoFlag) {
-								if (playerActor.hasCondition(lowerCondName) == true){
-									return ui.notifications.error("Token already has that condition!")
-								}
-								await playerActor.setCondition(lowerCondName, true);
-								applyFlatfooted(playerActor,undoFlag,tokenType)
-								if (tokenType == "npc") {
-									//TODO: No moves
-									modifyBAB(playerActor,undoFlag,OFFKILTER_MOD);
-								}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === false){
+								return ui.notifications.error("Token already has that condition!")
+							}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === true){
+								return ui.notifications.error("Token doesn't have this condition!")
+							}
+							await playerActor.setCondition(lowerCondName, !undoFlag);
+							applyFlatfooted(playerActor,undoFlag,tokenType)
+							if (tokenType == "npc") {
+								//TODO: No moves
+								//modifyBAB(playerActor,undoFlag,OFFKILTER_MOD);
+							}
+							if (!undoFlag) {								
 								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
 							}
-							else {
-								await playerActor.setCondition(lowerCondName, false);
-								applyFlatfooted(playerActor,undoFlag,tokenType)
-							}
-							break;
+														break;
 
 						//Off-Target
 						case "Offtarget":
-							condName = "Offtarget"
+							condName = "Off-target"
 							lowerCondName = condName.charAt(0).toLowerCase() + condName.slice(1)
-							if (!undoFlag) {
-								if (playerActor.hasCondition(lowerCondName) == true){
-									return ui.notifications.error("Token already has that condition!")
-								}
-								await playerActor.setCondition(lowerCondName, true);
-								if (tokenType == "npc") {
-									modifyBAB(playerActor,undoFlag,OFFTARGET_MOD);
-								}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === false){
+								return ui.notifications.error("Token already has that condition!")
+							}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === true){
+								return ui.notifications.error("Token doesn't have this condition!")
+							}
+							await playerActor.setCondition(lowerCondName, !undoFlag);
+							if (tokenType == "npc") {
+							}
+							if (!undoFlag) {								
 								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
 							}
-							else {
-								await playerActor.setCondition(lowerCondName, false);
-							}
+							
 							break;
 						
 						//Panicked
 						case "Panicked":
 							condName = "Panicked"
 							lowerCondName = condName.charAt(0).toLowerCase() + condName.slice(1)
-							if (!undoFlag) {
-								if (playerActor.hasCondition(lowerCondName) == true){
-									return ui.notifications.error("Token already has that condition!")
-								}
-								await playerActor.setCondition(lowerCondName, true);
-								if (tokenType == "npc") {
-									//TODO: -2 ability checks, and skill checks
-									modifyRefSave(playerActor,undoFlag,PANICKED_MOD);
-									modifyFortSave(playerActor,undoFlag,PANICKED_MOD);
-									modifyWillSave(playerActor,undoFlag,PANICKED_MOD);
-								}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === false){
+								return ui.notifications.error("Token already has that condition!")
+							}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === true){
+								return ui.notifications.error("Token doesn't have this condition!")
+							}
+							await playerActor.setCondition(lowerCondName, !undoFlag);
+							if (tokenType == "npc") {
+								//TODO: -2 ability checks, and skill checks
+								modifyRefSave(playerActor,undoFlag,PANICKED_MOD);
+								modifyFortSave(playerActor,undoFlag,PANICKED_MOD);
+								modifyWillSave(playerActor,undoFlag,PANICKED_MOD);
+							}
+							if (!undoFlag) {								
 								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
 							}
-							else {
-								await playerActor.setCondition(lowerCondName, false);
-							}
+							
 							break;
 
 						//Paralyzed
 						case "Paralyzed":
 							condName = "Paralyzed"
 							lowerCondName = condName.charAt(0).toLowerCase() + condName.slice(1)
-							if (!undoFlag) {
-								if (playerActor.hasCondition(lowerCondName) == true){
-									return ui.notifications.error("Token already has that condition!")
-								}
-								await playerActor.setCondition(lowerCondName, true);
-								if (tokenType == "npc") {
-									//TODO: -5 dex, no moves
-								}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === false){
+								return ui.notifications.error("Token already has that condition!")
+							}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === true){
+								return ui.notifications.error("Token doesn't have this condition!")
+							}
+							await playerActor.setCondition(lowerCondName, !undoFlag);
+							if (tokenType == "npc") {
+								//TODO: -5 dex, no moves
+							}
+							if (!undoFlag) {								
 								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
-							}
-							else {
-								await playerActor.setCondition(lowerCondName, false);
-							}
+							}							
 							break;
 							
 						//Pinned
 						case "Pinned":
 							condName = "Pinned"
 							lowerCondName = condName.charAt(0).toLowerCase() + condName.slice(1)
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === false){
+								return ui.notifications.error("Token already has that condition!")
+							}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === true){
+								return ui.notifications.error("Token doesn't have this condition!")
+							}
+							await playerActor.setCondition(lowerCondName, !undoFlag);
+							applyFlatfooted(playerActor,undoFlag,tokenType);
+							if (tokenType == "npc") {
+								//TODO: no moves and -4 dex skill/ability
+								modifyAC(playerActor,undoFlag,PINNED_MOD);
+								modifyBAB(playerActor,undoFlag,PINNED_MOD);
+								modifyRefSave(playerActor,undoFlag,PINNED_MOD);
+							}
 							if (!undoFlag) {
-								if (playerActor.hasCondition(lowerCondName) == true){
-									return ui.notifications.error("Token already has that condition!")
-								}
-								await playerActor.setCondition(lowerCondName, true);
-								applyFlatfooted(playerActor,undoFlag,tokenType);
-								if (tokenType == "npc") {
-									//TODO: no moves and -4 dex skill/ability
-									modifyAC(playerActor,undoFlag,PINNED_MOD);
-									modifyBAB(playerActor,undoFlag,PINNED_MOD);
-									modifyRefSave(playerActor,undoFlag,PINNED_MOD);
-								}
 								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
-							}
-							else {
-								await playerActor.setCondition(lowerCondName, false);
-								applyFlatfooted(playerActor,undoFlag,tokenType);
-							}
+							}							
 							break;
 							
 
@@ -598,103 +577,102 @@ Possible future additions:
 						case "Prone":
 							condName = "Prone"
 							lowerCondName = condName.charAt(0).toLowerCase() + condName.slice(1)
-							if (!undoFlag) {
-								if (playerActor.hasCondition(lowerCondName) == true){
-									return ui.notifications.error("Token already has that condition!")
-								}
-								await playerActor.setCondition(lowerCondName, true);
-								if (tokenType == "npc") {
-									//TODO: +4 range AC, -4 melee AC
-									modifyBAB(playerActor,undoFlag,PRONE_MOD,true,false);
-								}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === false){
+								return ui.notifications.error("Token already has that condition!")
+							}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === true){
+								return ui.notifications.error("Token doesn't have this condition!")
+							}
+							await playerActor.setCondition(lowerCondName, !undoFlag);
+							if (tokenType == "npc") {
+								//TODO: +4 range AC, -4 melee AC
+								modifyBAB(playerActor,undoFlag,PRONE_MOD,true,false);
+							}
+							if (!undoFlag) {								
 								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
-							}
-							else {
-								await playerActor.setCondition(lowerCondName, false);
-							}
+							}							
 							break;
 
 						//Shaken
 						case "Shaken":
 							condName = "Shaken"
 							lowerCondName = condName.charAt(0).toLowerCase() + condName.slice(1)
-							if (!undoFlag) {
-								if (playerActor.hasCondition(lowerCondName) == true){
-									return ui.notifications.error("Token already has that condition!")
-								}
-								await playerActor.setCondition(lowerCondName, true);
-								if (tokenType == "npc") {
-									modifyRefSave(playerActor,undoFlag,SHAKEN_MOD);
-									modifyFortSave(playerActor,undoFlag,SHAKEN_MOD);
-									modifyWillSave(playerActor,undoFlag,SHAKEN_MOD);
-									modifyBAB(playerActor,undoFlag,SHAKEN_MOD);
-								}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === false){
+								return ui.notifications.error("Token already has that condition!")
+							}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === true){
+								return ui.notifications.error("Token doesn't have this condition!")
+							}
+							await playerActor.setCondition(lowerCondName, !undoFlag);
+							if (tokenType == "npc") {
+								modifyRefSave(playerActor,undoFlag,SHAKEN_MOD);
+								modifyFortSave(playerActor,undoFlag,SHAKEN_MOD);
+								modifyWillSave(playerActor,undoFlag,SHAKEN_MOD);
+								modifyBAB(playerActor,undoFlag,SHAKEN_MOD);
+							}
+							if (!undoFlag) {								
 								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
-							}
-							else {
-								await playerActor.setCondition(lowerCondName, false);
-							}
+							}						
 							break;
 						
 						//Sickened
 						case "Sickened":
 							condName = "Sickened"
 							lowerCondName = condName.charAt(0).toLowerCase() + condName.slice(1)
-							if (!undoFlag) {
-								if (playerActor.hasCondition(lowerCondName) == true){
-									return ui.notifications.error("Token already has that condition!")
-								}
-								await playerActor.setCondition(lowerCondName, true);
-								if (tokenType == "npc") {
-									modifyRefSave(playerActor,undoFlag,SICKENED_MOD);
-									modifyFortSave(playerActor,undoFlag,SICKENED_MOD);
-									modifyWillSave(playerActor,undoFlag,SICKENED_MOD);
-									modifyBAB(playerActor,undoFlag,SICKENED_MOD);
-									modifyAD(playerActor,undoFlag,SICKENED_MOD);
-								}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === false){
+								return ui.notifications.error("Token already has that condition!")
+							}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === true){
+								return ui.notifications.error("Token doesn't have this condition!")
+							}
+							await playerActor.setCondition(lowerCondName, !undoFlag);
+							if (tokenType == "npc") {
+								modifyRefSave(playerActor,undoFlag,SICKENED_MOD);
+								modifyFortSave(playerActor,undoFlag,SICKENED_MOD);
+								modifyWillSave(playerActor,undoFlag,SICKENED_MOD);
+								modifyBAB(playerActor,undoFlag,SICKENED_MOD);
+								modifyAD(playerActor,undoFlag,SICKENED_MOD);
+							}
+							if (!undoFlag) {								
 								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
-							}
-							else {
-								await playerActor.setCondition(lowerCondName, false);
-							}
+							}							
 							break;
 
 						//Staggered
 						case "Staggered":
 							condName = "Staggered"
 							lowerCondName = condName.charAt(0).toLowerCase() + condName.slice(1)
-							if (!undoFlag) {
-								if (playerActor.hasCondition(lowerCondName) == true){
-									return ui.notifications.error("Token already has that condition!")
-								}
-								await playerActor.setCondition(lowerCondName, true);
-								if (tokenType == "npc") {
-								}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === false){
+								return ui.notifications.error("Token already has that condition!")
+							}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === true){
+								return ui.notifications.error("Token doesn't have this condition!")
+							}
+							await playerActor.setCondition(lowerCondName, !undoFlag);
+							if (tokenType == "npc") {
+							}
+							if (!undoFlag) {								
 								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
-							}
-							else {
-								await playerActor.setCondition(lowerCondName, false);
-							}
+							}							
 							break;
 
 						//Stunned
 						case "Stunned":
 							condName = "Stunned"
 							lowerCondName = condName.charAt(0).toLowerCase() + condName.slice(1)
-							if (!undoFlag) {
-								if (playerActor.hasCondition(lowerCondName) == true){
-									return ui.notifications.error("Token already has that condition!")
-								}
-								await playerActor.setCondition(lowerCondName, true);
-								applyFlatfooted(playerActor,undoFlag,tokenType);
-								if (tokenType == "npc") {
-								}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === false){
+								return ui.notifications.error("Token already has that condition!")
+							}
+							if (playerActor.hasCondition(lowerCondName) !== undoFlag && undoFlag === true){
+								return ui.notifications.error("Token doesn't have this condition!")
+							}
+							await playerActor.setCondition(lowerCondName, !undoFlag);
+							applyFlatfooted(playerActor,undoFlag,tokenType);
+							if (tokenType == "npc") {
+							}
+							if (!undoFlag) {								
 								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
-							}
-							else {
-								await playerActor.setCondition(lowerCondName, false);
-								applyFlatfooted(playerActor,undoFlag,tokenType);
-							}
+							}							
 							break;
 
 
@@ -706,7 +684,7 @@ Possible future additions:
 						case "ACMod":
 							modifyAC(playerActor,undoFlag,INHIB_AC_MOD);
 							//token.toggleEffect(effectbrokenshield);
-							if (undoFlag) {
+							if (!undoFlag) {
 								turnAlert(formRounds,"AC inhib has ended!")
 							}
 							break;
@@ -716,7 +694,7 @@ Possible future additions:
 						case "HitMod":
 							modifyBAB(playerActor,undoFlag,INHIB_BAB_MOD);
 							//token.toggleEffect(effectofftarget);
-							if (undoFlag) {
+							if (!undoFlag) {
 								turnAlert(formRounds,"Attack inhib has ended!")
 							}
 							break;
@@ -726,7 +704,7 @@ Possible future additions:
 						case "MovespeedMod":
 							modifyMovement(playerActor,undoFlag,MOVEMENT_MOD);
 							//token.toggleEffect(effectentangled);
-							if (undoFlag) {
+							if (!undoFlag) {
 								turnAlert(formRounds,"Movespeed inhib has ended!")
 							}
 							break;	
