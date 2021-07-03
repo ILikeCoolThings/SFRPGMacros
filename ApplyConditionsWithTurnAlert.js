@@ -173,10 +173,10 @@ Possible future additions:
 									return ui.notifications.error("Token already has that condition!")
 								}
 								await playerActor.setCondition(lowerCondName, true);
-							if (tokenType == "npc") {
-								//TODO: -10 to perception
+								if (tokenType == "npc") {
+									//TODO: -10 to perception
 								}
-							turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
+								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
 							}
 							else {
 								await playerActor.setCondition(lowerCondName, false);
@@ -194,10 +194,10 @@ Possible future additions:
                                 }
                                 await playerActor.setCondition(lowerCondName, true);
                                 applyFlatfooted(playerActor,undoFlag,tokenType);
-                            if (tokenType == "npc") {
-                                //TODO: -4 to Str and Dex based skill checks
-                                }
-                            turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
+								if (tokenType == "npc") {
+									//TODO: -4 to Str and Dex based skill checks
+								}
+                            	turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
                             }
                             else {
                                 await playerActor.setCondition(lowerCondName, false);
@@ -214,11 +214,11 @@ Possible future additions:
 								if (playerActor.hasCondition(lowerCondName) == true){
 									return ui.notifications.error("Token already has that condition!")
 								}
-							await playerActor.setCondition(lowerCondName, true);
-							applyFlatfooted(playerActor,undoFlag,tokenType);
-							if (tokenType == "npc") {
+								await playerActor.setCondition(lowerCondName, true);
+								applyFlatfooted(playerActor,undoFlag,tokenType);
+								if (tokenType == "npc") {
 								}
-							turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
+								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
 							}
 							else {
 								await playerActor.setCondition(lowerCondName, false);
@@ -235,10 +235,10 @@ Possible future additions:
 								if (playerActor.hasCondition(lowerCondName) == true){
 									return ui.notifications.error("Token already has that condition!")
 								}
-							await playerActor.setCondition(lowerCondName, true);
-							if (tokenType == "npc") {
+								await playerActor.setCondition(lowerCondName, true);
+								if (tokenType == "npc") {
 								}
-							turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
+								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
 							}
 							else {
 								await playerActor.setCondition(lowerCondName, false);
@@ -254,10 +254,10 @@ Possible future additions:
 								if (playerActor.hasCondition(lowerCondName) == true){
 									return ui.notifications.error("Token already has that condition!")
 								}
-							await playerActor.setCondition(lowerCondName, true);
-							if (tokenType == "npc") {
+								await playerActor.setCondition(lowerCondName, true);
+								if (tokenType == "npc") {
 								}
-							turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
+								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
 							}
 							else {
 								await playerActor.setCondition(lowerCondName, false);
@@ -273,10 +273,10 @@ Possible future additions:
 								if (playerActor.hasCondition(lowerCondName) == true){
 									return ui.notifications.error("Token already has that condition!")
 								}
-							await playerActor.setCondition(lowerCondName, true);
-							if (tokenType == "npc") {
-								//TODO: -1 perception
-								modifyBAB(playerActor,undoFlag,DAZZZLED_MOD);
+								await playerActor.setCondition(lowerCondName, true);
+								if (tokenType == "npc") {
+									//TODO: -1 perception
+									modifyBAB(playerActor,undoFlag,DAZZZLED_MOD);
 								}
 							turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
 							}
@@ -294,11 +294,11 @@ Possible future additions:
 								if (playerActor.hasCondition(lowerCondName) == true){
 									return ui.notifications.error("Token already has that condition!")
 								}
-							await playerActor.setCondition(lowerCondName, true);
-							if (tokenType == "npc") {
-								//TODO: -4 perception checks
+								await playerActor.setCondition(lowerCondName, true);
+								if (tokenType == "npc") {
+									//TODO: -4 perception checks
 								}
-							turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
+								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
 							}
 							else {
 								await playerActor.setCondition(lowerCondName, false);
@@ -314,13 +314,13 @@ Possible future additions:
 								if (playerActor.hasCondition(lowerCondName) == true){
 									return ui.notifications.error("Token already has that condition!")
 								}
-							await playerActor.setCondition(lowerCondName, true);
-							if (tokenType == "npc") {
-								//TODO: Max dex??
-								modifyMovementConst(playerActor,undoFlag,ENCUMBERED_SPEED_MOD);
-								modifyAC(playerActor,undoFlag,ENCUMBERED_MOD);
+								await playerActor.setCondition(lowerCondName, true);
+								if (tokenType == "npc") {
+									//TODO: Max dex??
+									modifyMovementConst(playerActor,undoFlag,ENCUMBERED_SPEED_MOD);
+									modifyAC(playerActor,undoFlag,ENCUMBERED_MOD);
 								}
-							turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
+								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
 							}
 							else {
 								await playerActor.setCondition(lowerCondName, false);
@@ -338,15 +338,15 @@ Possible future additions:
 								if (playerActor.hasCondition(lowerCondName) == true){
 									return ui.notifications.error("Token already has that condition!")
 								}
-							await playerActor.setCondition(lowerCondName, true);
-							if (tokenType == "npc") {
-								modifyMovement(playerActor,undoFlag,MOVEMENT_MOD);
-								modifyBAB(playerActor,undoFlag,ENTANGLED_MOD);
-								modifyAC(playerActor,undoFlag,ENTANGLED_MOD);
-								modifyRefSave(playerActor,undoFlag,ENTANGLED_MOD);
-								//TODO: -2 Dex skill and ability checks
+								await playerActor.setCondition(lowerCondName, true);
+								if (tokenType == "npc") {
+									modifyMovement(playerActor,undoFlag,MOVEMENT_MOD);
+									modifyBAB(playerActor,undoFlag,ENTANGLED_MOD);
+									modifyAC(playerActor,undoFlag,ENTANGLED_MOD);
+									modifyRefSave(playerActor,undoFlag,ENTANGLED_MOD);
+									//TODO: -2 Dex skill and ability checks
 								}
-							turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
+								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
 							}
 							else {
 								await playerActor.setCondition(lowerCondName, false);
@@ -370,7 +370,7 @@ Possible future additions:
 								modifyAD(playerActor,undoFlag,EXHAUSTED_MOD,true,false);
 								modifyRefSave(playerActor,undoFlag,EXHAUSTED_MOD);
 								modifyMovement(playerActor,undoFlag,MOVEMENT_MOD);
-								}
+							}
 							turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
 							}
 							else {
@@ -394,7 +394,7 @@ Possible future additions:
 								modifyRefSave(playerActor,undoFlag,FATIGUED_MOD);
 								modifyAD(playerActor,undoFlag,FATIGUED_MOD,true,false);
 								//TODO: -1 Str/Dex-based skill and ability checks
-								}
+							}
 							turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
 							}
 							else {
@@ -411,11 +411,11 @@ Possible future additions:
 								if (playerActor.hasCondition(lowerCondName) == true){
 									return ui.notifications.error("Token already has that condition!")
 								}
-							await playerActor.setCondition(lowerCondName, true);
-							applyFlatfooted(playerActor,undoFlag,tokenType);
-							if (tokenType == "npc") {
+								await playerActor.setCondition(lowerCondName, true);
+								applyFlatfooted(playerActor,undoFlag,tokenType);
+								if (tokenType == "npc") {
 								}
-							turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
+								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
 							}
 							else {
 								await playerActor.setCondition(lowerCondName, false);
@@ -432,15 +432,15 @@ Possible future additions:
 								if (playerActor.hasCondition(lowerCondName) == true){
 									return ui.notifications.error("Token already has that condition!")
 								}
-							await playerActor.setCondition(lowerCondName, true);
-							if (tokenType == "npc") {
-								//TODO: -2 ability checks, and skill checks
-								modifyRefSave(playerActor,undoFlag,FRIGHTENED_MOD);
-								modifyFortSave(playerActor,undoFlag,FRIGHTENED_MOD);
-								modifyWillSave(playerActor,undoFlag,FRIGHTENED_MOD);
-								modifyBAB(playerActor,undoFlag,FRIGHTENED_MOD);
+								await playerActor.setCondition(lowerCondName, true);
+								if (tokenType == "npc") {
+									//TODO: -2 ability checks, and skill checks
+									modifyRefSave(playerActor,undoFlag,FRIGHTENED_MOD);
+									modifyFortSave(playerActor,undoFlag,FRIGHTENED_MOD);
+									modifyWillSave(playerActor,undoFlag,FRIGHTENED_MOD);
+									modifyBAB(playerActor,undoFlag,FRIGHTENED_MOD);
 								}
-							turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
+								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
 							}
 							else {
 								await playerActor.setCondition(lowerCondName, false);
@@ -455,14 +455,14 @@ Possible future additions:
 								if (playerActor.hasCondition(lowerCondName) == true){
 									return ui.notifications.error("Token already has that condition!")
 								}
-							await playerActor.setCondition(lowerCondName, true);
-							if (tokenType == "npc") {
-								//TODO: -2 dex skill/ability
-								modifyRefSave(playerActor,undoFlag,GRAPPLED_MOD);
-								modifyBAB(playerActor,undoFlag,GRAPPLED_MOD);
-								modifyAC(playerActor,undoFlag,GRAPPLED_MOD);
+								await playerActor.setCondition(lowerCondName, true);
+								if (tokenType == "npc") {
+									//TODO: -2 dex skill/ability
+									modifyRefSave(playerActor,undoFlag,GRAPPLED_MOD);
+									modifyBAB(playerActor,undoFlag,GRAPPLED_MOD);
+									modifyAC(playerActor,undoFlag,GRAPPLED_MOD);
 								}
-							turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
+								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
 							}
 							else {
 								await playerActor.setCondition(lowerCondName, false);
@@ -477,10 +477,10 @@ Possible future additions:
 								if (playerActor.hasCondition(lowerCondName) == true){
 									return ui.notifications.error("Token already has that condition!")
 								}
-							await playerActor.setCondition(lowerCondName, true);
-							if (tokenType == "npc") {
+								await playerActor.setCondition(lowerCondName, true);
+								if (tokenType == "npc") {
 								}
-							turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
+								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
 							}
 							else {
 								await playerActor.setCondition(lowerCondName, false);
@@ -496,13 +496,13 @@ Possible future additions:
 								if (playerActor.hasCondition(lowerCondName) == true){
 									return ui.notifications.error("Token already has that condition!")
 								}
-							await playerActor.setCondition(lowerCondName, true);
-							applyFlatfooted(playerActor,undoFlag,tokenType)
-							if (tokenType == "npc") {
-								//TODO: No moves
-								modifyBAB(playerActor,undoFlag,OFFKILTER_MOD);
+								await playerActor.setCondition(lowerCondName, true);
+								applyFlatfooted(playerActor,undoFlag,tokenType)
+								if (tokenType == "npc") {
+									//TODO: No moves
+									modifyBAB(playerActor,undoFlag,OFFKILTER_MOD);
 								}
-							turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
+								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
 							}
 							else {
 								await playerActor.setCondition(lowerCondName, false);
@@ -518,11 +518,11 @@ Possible future additions:
 								if (playerActor.hasCondition(lowerCondName) == true){
 									return ui.notifications.error("Token already has that condition!")
 								}
-							await playerActor.setCondition(lowerCondName, true);
-							if (tokenType == "npc") {
-								modifyBAB(playerActor,undoFlag,OFFTARGET_MOD);
+								await playerActor.setCondition(lowerCondName, true);
+								if (tokenType == "npc") {
+									modifyBAB(playerActor,undoFlag,OFFTARGET_MOD);
 								}
-							turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
+								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
 							}
 							else {
 								await playerActor.setCondition(lowerCondName, false);
@@ -537,14 +537,14 @@ Possible future additions:
 								if (playerActor.hasCondition(lowerCondName) == true){
 									return ui.notifications.error("Token already has that condition!")
 								}
-							await playerActor.setCondition(lowerCondName, true);
-							if (tokenType == "npc") {
-								//TODO: -2 ability checks, and skill checks
-								modifyRefSave(playerActor,undoFlag,PANICKED_MOD);
-								modifyFortSave(playerActor,undoFlag,PANICKED_MOD);
-								modifyWillSave(playerActor,undoFlag,PANICKED_MOD);
+								await playerActor.setCondition(lowerCondName, true);
+								if (tokenType == "npc") {
+									//TODO: -2 ability checks, and skill checks
+									modifyRefSave(playerActor,undoFlag,PANICKED_MOD);
+									modifyFortSave(playerActor,undoFlag,PANICKED_MOD);
+									modifyWillSave(playerActor,undoFlag,PANICKED_MOD);
 								}
-							turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
+								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
 							}
 							else {
 								await playerActor.setCondition(lowerCondName, false);
@@ -559,11 +559,11 @@ Possible future additions:
 								if (playerActor.hasCondition(lowerCondName) == true){
 									return ui.notifications.error("Token already has that condition!")
 								}
-							await playerActor.setCondition(lowerCondName, true);
-							if (tokenType == "npc") {
-								//TODO: -5 dex, no moves
+								await playerActor.setCondition(lowerCondName, true);
+								if (tokenType == "npc") {
+									//TODO: -5 dex, no moves
 								}
-							turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
+								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
 							}
 							else {
 								await playerActor.setCondition(lowerCondName, false);
@@ -578,15 +578,15 @@ Possible future additions:
 								if (playerActor.hasCondition(lowerCondName) == true){
 									return ui.notifications.error("Token already has that condition!")
 								}
-							await playerActor.setCondition(lowerCondName, true);
-							applyFlatfooted(playerActor,undoFlag,tokenType);
-							if (tokenType == "npc") {
-								//TODO: no moves and -4 dex skill/ability
-								modifyAC(playerActor,undoFlag,PINNED_MOD);
-								modifyBAB(playerActor,undoFlag,PINNED_MOD);
-								modifyRefSave(playerActor,undoFlag,PINNED_MOD);
+								await playerActor.setCondition(lowerCondName, true);
+								applyFlatfooted(playerActor,undoFlag,tokenType);
+								if (tokenType == "npc") {
+									//TODO: no moves and -4 dex skill/ability
+									modifyAC(playerActor,undoFlag,PINNED_MOD);
+									modifyBAB(playerActor,undoFlag,PINNED_MOD);
+									modifyRefSave(playerActor,undoFlag,PINNED_MOD);
 								}
-							turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
+								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
 							}
 							else {
 								await playerActor.setCondition(lowerCondName, false);
@@ -603,12 +603,12 @@ Possible future additions:
 								if (playerActor.hasCondition(lowerCondName) == true){
 									return ui.notifications.error("Token already has that condition!")
 								}
-							await playerActor.setCondition(lowerCondName, true);
-							if (tokenType == "npc") {
-								//TODO: +4 range AC, -4 melee AC
-								modifyBAB(playerActor,undoFlag,PRONE_MOD,true,false);
+								await playerActor.setCondition(lowerCondName, true);
+								if (tokenType == "npc") {
+									//TODO: +4 range AC, -4 melee AC
+									modifyBAB(playerActor,undoFlag,PRONE_MOD,true,false);
 								}
-							turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
+								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
 							}
 							else {
 								await playerActor.setCondition(lowerCondName, false);
@@ -623,14 +623,14 @@ Possible future additions:
 								if (playerActor.hasCondition(lowerCondName) == true){
 									return ui.notifications.error("Token already has that condition!")
 								}
-							await playerActor.setCondition(lowerCondName, true);
-							if (tokenType == "npc") {
-								modifyRefSave(playerActor,undoFlag,SHAKEN_MOD);
-								modifyFortSave(playerActor,undoFlag,SHAKEN_MOD);
-								modifyWillSave(playerActor,undoFlag,SHAKEN_MOD);
-								modifyBAB(playerActor,undoFlag,SHAKEN_MOD);
+								await playerActor.setCondition(lowerCondName, true);
+								if (tokenType == "npc") {
+									modifyRefSave(playerActor,undoFlag,SHAKEN_MOD);
+									modifyFortSave(playerActor,undoFlag,SHAKEN_MOD);
+									modifyWillSave(playerActor,undoFlag,SHAKEN_MOD);
+									modifyBAB(playerActor,undoFlag,SHAKEN_MOD);
 								}
-							turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
+								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
 							}
 							else {
 								await playerActor.setCondition(lowerCondName, false);
@@ -645,15 +645,15 @@ Possible future additions:
 								if (playerActor.hasCondition(lowerCondName) == true){
 									return ui.notifications.error("Token already has that condition!")
 								}
-							await playerActor.setCondition(lowerCondName, true);
-							if (tokenType == "npc") {
-								modifyRefSave(playerActor,undoFlag,SICKENED_MOD);
-								modifyFortSave(playerActor,undoFlag,SICKENED_MOD);
-								modifyWillSave(playerActor,undoFlag,SICKENED_MOD);
-								modifyBAB(playerActor,undoFlag,SICKENED_MOD);
-								modifyAD(playerActor,undoFlag,SICKENED_MOD);
+								await playerActor.setCondition(lowerCondName, true);
+								if (tokenType == "npc") {
+									modifyRefSave(playerActor,undoFlag,SICKENED_MOD);
+									modifyFortSave(playerActor,undoFlag,SICKENED_MOD);
+									modifyWillSave(playerActor,undoFlag,SICKENED_MOD);
+									modifyBAB(playerActor,undoFlag,SICKENED_MOD);
+									modifyAD(playerActor,undoFlag,SICKENED_MOD);
 								}
-							turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
+								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
 							}
 							else {
 								await playerActor.setCondition(lowerCondName, false);
@@ -668,10 +668,10 @@ Possible future additions:
 								if (playerActor.hasCondition(lowerCondName) == true){
 									return ui.notifications.error("Token already has that condition!")
 								}
-							await playerActor.setCondition(lowerCondName, true);
-							if (tokenType == "npc") {
+								await playerActor.setCondition(lowerCondName, true);
+								if (tokenType == "npc") {
 								}
-							turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
+								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
 							}
 							else {
 								await playerActor.setCondition(lowerCondName, false);
@@ -686,11 +686,11 @@ Possible future additions:
 								if (playerActor.hasCondition(lowerCondName) == true){
 									return ui.notifications.error("Token already has that condition!")
 								}
-							await playerActor.setCondition(lowerCondName, true);
-							applyFlatfooted(playerActor,undoFlag,tokenType);
-							if (tokenType == "npc") {
+								await playerActor.setCondition(lowerCondName, true);
+								applyFlatfooted(playerActor,undoFlag,tokenType);
+								if (tokenType == "npc") {
 								}
-							turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
+								turnAlert(formRounds,condName.concat(" has ended on ",tokenName,"!"))
 							}
 							else {
 								await playerActor.setCondition(lowerCondName, false);
