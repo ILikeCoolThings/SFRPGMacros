@@ -16,9 +16,7 @@ This macro is to be used on NPCs in combat. Only use it on one token at a time. 
 	Has an undo feature to remove the condition for when the condition expires.
 
 Possible future additions:
-	Add a checker to not add more than one instance of a condition.
 	Add a way to modify abiity scores (Not sure how often this comes up in combat. Not much in my expeirence.)
-	Check if Turn Alert is installed to not spam the turn error.
 	FX Effects?
 */
 
