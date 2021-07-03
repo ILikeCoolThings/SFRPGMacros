@@ -1,5 +1,6 @@
 /* Notes:
 
+
 ***Install module "Turn Alert" for turn tracking***
 
 This macro is to be used on NPCs in combat. Only use it on one token at a time. It will:
