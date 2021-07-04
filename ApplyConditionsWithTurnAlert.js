@@ -1009,7 +1009,9 @@ function applyFlatfooted (actor,is_Undo,tokenType) {
 			modifyAC(actor,is_Undo,FLAT_FOOT_MOD);
 		}
 	} else {
-		//token.actor.update({"data.conditions.flat-footed" : false});
+		if (token.actor.hasCondition("flat-footed") == false){
+			return
+		}
 		actor.setCondition("flat-footed", false);
 		if (tokenType == "npc"){
 			modifyAC(actor,is_Undo,FLAT_FOOT_MOD);
